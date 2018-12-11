@@ -78,27 +78,6 @@
           "description": "DNS Label for the Public IP. Must be lowercase. It should match with the following regular expression: ^[a-z][a-z0-9-]{1,61}[a-z0-9]$ or it will raise an error."
         }
       },
-      "startBoxstarterScriptFileName": {
-        "type": "string",
-        "defaultValue": "Start-Boxstarter.ps1",
-        "metadata": {
-          "description": "PowerShell script name to execute"
-        }
-      },
-      "startBoxstarterScriptLocation": {
-        "type": "string",
-        "defaultValue": "https://gist.githubusercontent.com/TomasDeceuninck/ff6fe5cb4c1cb82a806c2044b534069e/raw/dad9db0b8bc44897f8dd6c53faa29adbfb8d3df8/",
-        "metadata": {
-          "description": "Raw gist URI"
-        }
-      },
-      "boxstarterConfigRawGistURL": {
-        "type": "string",
-        "defaultValue": "https://gist.githubusercontent.com/TomasDeceuninck/d9518726aa832d01644427f6190a6b20/raw/ed46b4ab72981d3a2679e6154ab1cf656beacc62/DevClientConfig.ps1",
-        "metadata": {
-          "description": "Raw gist URI of config script"
-        }
-      },
       "location": {
         "type": "string",
         "defaultValue": "[resourceGroup().location]",
@@ -229,33 +208,7 @@
               }
             ]
           }
-        },
-        "resources": [
-          {
-            "name": "StartBoxstarter",
-            "type": "extensions",
-            "location": "[parameters('location')]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-              "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
-            ],
-            "tags": {
-              "displayName": "StartBoxstarter"
-            },
-            "properties": {
-              "publisher": "Microsoft.Compute",
-              "type": "CustomScriptExtension",
-              "typeHandlerVersion": "1.9",
-              "autoUpgradeMinorVersion": true,
-              "settings": {
-                "fileUris": [
-                  "[concat(parameters('startBoxstarterScriptLocation'),parameters('startBoxstarterScriptFileName'))]"
-                ],
-                "commandToExecute": "[concat('powershell -ExecutionPolicy bypass -File ',parameters('startBoxstarterScriptFileName'),' -ConfigRawGistURL ',parameters('boxstarterConfigRawGistURL'))]"
-              }
-            }
-          }
-        ]
+        }
       },
       {
         "name": "[variables('publicIPAddressName')]",

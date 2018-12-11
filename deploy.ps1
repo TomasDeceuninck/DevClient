@@ -2,14 +2,16 @@ Param(
     [Parameter(Mandatory = $true)]
     [String] $SubscriptionID,
     [Parameter(Mandatory = $true)]
-    [ValidateLength(1,8)]
+    [ValidateLength(1, 8)]
     [String] $Name
 )
 
 import-module AzureRm.Profile -RequiredVersion 5.6.0
 Import-Module AzureRm.Compute
 
-Select-AzureRmSubscription $SubscriptionID
+Select-AzureRmSubscription $SubscriptionID | % {
+    Write-Host ('Selected AzureRM Subscription: {0}' -f $_.Name) -ForegroundColor Green
+}
 
 $ResourceGroup = @{
     Name     = ('rg-{0}-devclient' -f $Name)
@@ -32,10 +34,11 @@ $Deployment = @{
     ResourceGroupName       = $ResourceGroup.Name
     TemplateFile            = '.\devclient.json'
     TemplateParameterObject = @{
-        vmName                = ('{0}-dev-vm' -f $Name)
-        vmAdminUserName       = 'LocalAdmin'
-        vmAdminPassword       = 'adm1n@dev'
-        dnsLabelPrefix        = ('{0}devclient' -f $Name)
+        vmName          = ('{0}-dev-vm' -f $Name)
+        vmAdminUserName = 'LocalAdmin'
+        vmAdminPassword = 'adm1n@dev'
+        vmSize          = 'Standard_D4_v3'
+        dnsLabelPrefix  = ('{0}devclient' -f $Name)
     }
     Verbose                 = $true
 }
